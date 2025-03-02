@@ -2,47 +2,22 @@
 
 import { Container } from '@/app/components/Container';
 import { Video } from '@/app/components/ui/Video';
-import { useDict } from '@/app/providers/LangProvider';
-import { useMemo } from 'react';
 import { FeaturedWrapper } from '@/app/components/ui/FeaturedWrapper';
+import { useTranslations } from 'next-intl';
 
 const speed = 0.5;
 
 const messageChart = '/gallery/message-chart.svg';
+const bestChoicesKeys = [
+  'Choice-1',
+  'Choice-2',
+  'Choice-3',
+  'Choice-4',
+  'Choice-5',
+] as const;
 
 export const BestChoicePlaygrounds = () => {
-  const dict = useDict();
-
-  const items = useMemo(
-    () => [
-      {
-        title: dict.bestChoicePlaygrounds.items[0].title,
-        description: dict.bestChoicePlaygrounds.items[0].description,
-        icon: messageChart,
-      },
-      {
-        title: dict.bestChoicePlaygrounds.items[1].title,
-        description: dict.bestChoicePlaygrounds.items[1].description,
-        icon: messageChart,
-      },
-      {
-        title: dict.bestChoicePlaygrounds.items[2].title,
-        description: dict.bestChoicePlaygrounds.items[2].description,
-        icon: messageChart,
-      },
-      {
-        title: dict.bestChoicePlaygrounds.items[3].title,
-        description: dict.bestChoicePlaygrounds.items[3].description,
-        icon: messageChart,
-      },
-      {
-        title: dict.bestChoicePlaygrounds.items[4].title,
-        description: dict.bestChoicePlaygrounds.items[4].description,
-        icon: messageChart,
-      },
-    ],
-    [dict]
-  );
+  const bestChoices = useTranslations('HomePage.BestChoicePlaygrounds');
 
   return (
     <div>
@@ -51,14 +26,16 @@ export const BestChoicePlaygrounds = () => {
         id="about"
       >
         <h3 className="text-text-primary max-w-[768px] text-display-md-semibold">
-          {dict.about.title}
+          {bestChoices('title')}
         </h3>
         <div className="flex lg:flex-row flex-col gap-16">
           <div className="flex w-full lg:w-[434px] xl:w-[560px] flex-col gap-10 lg:gap-12">
-            {items.map(({ title, description, icon }) => {
+            {bestChoicesKeys.map((key) => {
+              const title = bestChoices(`${key}.title`);
+              const description = bestChoices(`${key}.description`);
               return (
                 <div key={title} className="flex gap-4">
-                  <FeaturedWrapper src={icon} />
+                  <FeaturedWrapper src={messageChart} />
                   <div className="pt-2.5 flex flex-col gap-2">
                     <span className="text-custom-lg-semibold lg:text-custom-xl-semibold text-text-primary">
                       {title}

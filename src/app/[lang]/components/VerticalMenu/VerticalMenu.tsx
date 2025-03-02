@@ -1,8 +1,7 @@
 import { useMenu } from '@/app/hooks/useMenu';
-import Link from 'next/link';
 import { NavigationMenu } from 'radix-ui';
 import { clsx } from 'clsx';
-import { useLocal } from '@/app/providers/LangProvider/LangProvider';
+import { Link } from '@/i18n/navigation';
 
 type ItemProps = {
   children: string;
@@ -37,7 +36,6 @@ export const VerticalMenu = ({
   onClick,
 }: VerticalMenuProps) => {
   const menu = useMenu();
-  const local = useLocal();
 
   return (
     <NavigationMenu.Root
@@ -46,7 +44,7 @@ export const VerticalMenu = ({
       {menu.map((item) => (
         <Item
           key={item.href}
-          href={`/${local}${item.href}`}
+          href={`${item.href}`}
           className={itemClassName}
           onClick={onClick}
         >

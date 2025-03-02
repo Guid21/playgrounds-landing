@@ -1,12 +1,40 @@
 'use client';
 import { Container } from '@/app/components/Container';
+import { NumberInput } from '@/app/components/NumberInput';
+import { Spinner } from '@/app/components/Spinner';
 import { Button } from '@/app/components/ui/Button';
 import { Input } from '@/app/components/ui/Input';
-import { useDict } from '@/app/providers/LangProvider';
+import { FeedbackFormStatus } from '@/constants';
+import { feedbackRequest, type FeedbackState } from '@/lib/actions/feedback';
+import clsx from 'clsx';
+import { useTranslations, useLocale } from 'next-intl';
 import Image from 'next/image';
+import { useActionState, useEffect } from 'react';
+import { toast } from 'react-toastify';
+
+const formId = 'contact-form';
 
 export const ContactForm = () => {
-  const dict = useDict();
+  const locale = useLocale();
+  const t = useTranslations('HomePage.ContactFormBlock');
+  const initialState: FeedbackState = {
+    message: null,
+    errors: {},
+    form: {},
+    status: null,
+  };
+
+  const [state, formAction, isPending] = useActionState(
+    feedbackRequest,
+    initialState
+  );
+
+  useEffect(() => {
+    if (state.status === FeedbackFormStatus.success) {
+      toast.success('Заявка принята. Мы с вами свяжемся в ближайшее время');
+    }
+  }, [state.status]);
+
   return (
     <Container
       className="lg:py-24 py-16 mx-auto w-full lg:gap-16 flex gap-16"
@@ -22,19 +50,73 @@ export const ContactForm = () => {
         />
       </div>
       <div className="flex-1 flex flex-col gap-10">
-        <h3 className="text-display-md-semibold">{dict.contactForm.title}</h3>
+        <h3 className="text-display-md-semibold">{t('title')}</h3>
         <div className="flex flex-col gap-8">
-          <div>
-            <Input placeholder="Ваше имя" />
-          </div>
+          <form
+            className="grid xl:grid-cols-1 md:grid-cols-2 grid-cols-1  gap-6"
+            action={formAction}
+            id={formId}
+          >
+            <input type="hidden" name="locale" value={locale} />
+            <Input
+              placeholder={t('NameField.placeholder')}
+              label={t('NameField.label')}
+              id="name"
+              name="name"
+              error={state?.errors?.name?.[0]}
+              defaultValue={state.form?.name}
+              className="w-full"
+              disabled={isPending}
+            />
+            <Input
+              placeholder={t('EmailField.placeholder')}
+              label={t('EmailField.label')}
+              id="email"
+              name="email"
+              error={state?.errors?.email?.[0]}
+              defaultValue={state.form?.email}
+              className="w-full"
+              disabled={isPending}
+            />
+            <NumberInput
+              placeholder={t('PhoneField.placeholder')}
+              label={t('PhoneField.label')}
+              id="phone"
+              name="phone"
+              error={state?.errors?.phone?.[0]}
+              defaultValue={state.form?.phone}
+              className="w-full"
+              disabled={isPending}
+            />
+            <Input
+              placeholder={t('CityField.placeholder')}
+              label={t('CityField.label')}
+              id="city"
+              name="city"
+              error={state?.errors?.city?.[0]}
+              defaultValue={state.form?.city}
+              className="w-full"
+              disabled={isPending}
+            />
+          </form>
           <div className="flex flex-col gap-3">
-            <Button>
-              <span className="text-custom-md-semibold">
-                {dict.contactForm.sendButton}
+            <Button form={formId} disabled={isPending} className="relative">
+              <span
+                className={clsx(
+                  'text-custom-md-semibold',
+                  isPending && 'invisible'
+                )}
+              >
+                {t('sendButton')}
               </span>
+              {isPending && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <Spinner />
+                </div>
+              )}
             </Button>
             <span className="text-custom-sm-regular text-gray-500">
-              {dict.contactForm.agreement}
+              {t('agreement')}
             </span>
           </div>
         </div>

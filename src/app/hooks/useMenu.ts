@@ -1,28 +1,28 @@
 import { useMemo } from 'react';
 import { PATHS } from '../constants/paths';
-import { useDict } from '../providers/LangProvider';
+import { useTranslations } from 'next-intl';
 
 export const useMenu = () => {
-  const dict = useDict();
+  const t = useTranslations('Menu');
   return useMemo(
     () => [
       {
         href: PATHS.ABOUT,
-        label: dict.menu.about,
+        label: t('about'),
       },
       {
         href: PATHS.CATALOG,
-        label: dict.menu.catalog,
+        label: t('catalog'),
       },
       {
         href: PATHS.WORKS,
-        label: dict.menu.works,
+        label: t('works'),
       },
       {
         href: PATHS.CONTACT,
-        label: dict.menu.contact,
+        label: t('contact'),
       },
     ],
-    [dict]
+    [t]
   );
 };

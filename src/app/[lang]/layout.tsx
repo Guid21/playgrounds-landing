@@ -1,9 +1,12 @@
 import { Header } from './components/Header';
-import { LangProvider } from '../providers/LangProvider';
 import { Footer } from './components/Footer';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { getLang } from '../lib/getLang';
+import { routing } from '@/i18n/routing';
+import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { ToastContainer } from 'react-toastify';
 
 const inter = Inter({
   display: 'swap',
@@ -30,7 +33,12 @@ export default async function RootLayout({
   children,
   params,
 }: RootLayoutProps) {
-  const lang = await getLang(params);
+  const { lang } = await params;
+  if (!routing.locales.includes(lang as any)) {
+    notFound();
+  }
+
+  const messages = await getMessages();
 
   return (
     <html
@@ -38,11 +46,12 @@ export default async function RootLayout({
       className={`${inter.className} antialiased bg-base-wite overscroll-none`}
     >
       <body className="h-screen max-h-screen flex flex-col overscroll-none">
-        <LangProvider params={params}>
+        <NextIntlClientProvider messages={messages}>
           <div className="flex-1 pt-20">{children}</div>
           <Footer />
           <Header />
-        </LangProvider>
+          <ToastContainer />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

@@ -2,10 +2,10 @@
 
 import { Container } from '@/app/components/Container';
 import { HorizontalMenu } from '../HorizontalMenu';
-import Link from 'next/link';
 import { Logo } from '../Logo';
 import Image from 'next/image';
 import { BurgerMenu } from '../BurgerMenu/BurgerMenu';
+import { Link } from '@/i18n/navigation';
 
 export const Header = () => {
   return (
