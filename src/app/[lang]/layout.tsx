@@ -45,7 +45,7 @@ export default async function RootLayout({
       lang={lang}
       className={`${inter.className} antialiased bg-base-wite overscroll-none`}
     >
-      <body className="h-screen max-h-screen flex flex-col overscroll-none">
+      <body className="h-dvh max-h-dvh flex flex-col overscroll-none">
         <NextIntlClientProvider messages={messages}>
           <div className="flex-1 pt-20">{children}</div>
           <Footer />
